@@ -33,6 +33,6 @@ class BusRouteEtaApplicationSpec extends Specification {
 
         and:
         sum
-        sum == 4
+        sum == 3
     }
 }
