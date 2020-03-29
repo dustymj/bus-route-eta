@@ -19,20 +19,4 @@ class BusRouteEtaApplicationSpec extends Specification {
         and:
         noExceptionThrown()
     }
-
-    def "test addTwoNumbers - valid - happy path"() {
-        given:
-        int numberOne = 1
-        int numberTwo = 2
-
-        when:
-        int sum = busRouteEtaApplication.addTwoNumbers(numberOne, numberTwo)
-
-        then:
-        0 * _
-
-        and:
-        sum
-        sum == 3
-    }
 }
