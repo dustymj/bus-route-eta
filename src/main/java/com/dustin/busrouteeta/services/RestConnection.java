@@ -3,6 +3,7 @@ package com.dustin.busrouteeta.services;
 import com.dustin.busrouteeta.data.BusRouteEtaConstants;
 import com.dustin.busrouteeta.data.DirectionVO;
 import com.dustin.busrouteeta.data.NexTripRouteVO;
+import com.dustin.busrouteeta.data.StopVO;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -46,6 +47,22 @@ public class RestConnection {
         }
 
         return directionVOS;
+    }
+
+    public static List<StopVO> getStops(String routeID, String direction) {
+        List<StopVO> stopVOS = new ArrayList<>();
+        String url = BusRouteEtaConstants.URL_STOPS + "/" + routeID + "/" + direction;
+
+        try {
+            String jsonResponseString = getJsonResponseForUrl(url);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+            stopVOS = Arrays.asList(mapper.readValue(jsonResponseString, StopVO[].class));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return stopVOS;
     }
 
     private static String getJsonResponseForUrl(String urlString) {
