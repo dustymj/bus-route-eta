@@ -1,2 +1,67 @@
 Personal Notes
 
+Personal documentation of the metrotransit API
+
+http://svc-api:47101/api/{ROUTE}/{DIRECTION}/{STOP}
+
+* Returns an array of NexTripDeparture objects, either an array of xml objects or JSON
+
+The NexTripDeparture object
+
+An array of NexTripDeparture elements is returned by the GetDepartures and GetTimepointDepartures operations. Each element consists of the fields:
+Actual - bool indicates the departure time is based on current information from the vehicle.
+BlockNumber - indicates the work for a vehicle.
+DepartureText - displays time format for scheduled time and countdown format for real-time departures. (Actual=true)
+DepartureTime - datetime value of the departure time.
+Description - describes the trip destination.
+Gate - indicates the stop or gate identifier where applicable.
+Route - the current route for this departure.
+RouteDirection - the current trip direction.
+Terminal - the route branch letter where applicable.
+VehicleHeading - this value is currently not available and always returns 0. (maybe someday)
+VehicleLatitude - last reported latitude. only included with real-time departures. (Actual=true)
+VehicleLongitude - last reported longitude. only included with real-time departures. (Actual=true)
+
+JSON can also be requested using appropriate request headers:
+Content-Type: application/json
+Accept: application/json
+
+Focal point of strategy: Use GetTimepointDepartures operation
+From documentation: "Returns the scheduled departures for a selected route, direction and timepoint stop."
+* Grab the list for the given route, direction, and stop.
+* Then, for the given time, find the next estimated stop and report it.
+* IDEA: Depending on value of "actual"
+    - True
+        * Say, "Transit will arrive in X minutes". Can use value direction from departureText
+    - False
+        * Say, "Transit is scheduled to arrive in X minutes". grab epoch from departureTime.
+    - Key difference is saying "will arrive" vs. "is scheduled to arrive". Which, arguably, is the definition of the
+      variable, 'actual'.
+* OTHER IDEA: DepartureTime field describes the departure time. Keep an eye on DepartureText, may contain more info than
+              it leads on to.
+              - FOLLOW UP: Ha! It does! Use DepartureText when the 'actual' is set to true.
+
+NOTES
+* Departure time is given in epoch with a modifier for the timezone.
+    - In the example given in the documentation, the departure time is "928167600000-0500"
+    - Translated, 928167600000 represents Monday, May 31, 1999 4:20 PM
+    - With -0500 modifier, represents Monday, May 31, 1999 11:20 AM
+    - Documentation is expecting Monday, May 31, 1999 11:20 AM
+* Path of least resistance may as well be receiving the XML
+    - The XML already accounts for local time.
+    - At least, that's the leading theory...jury is still out on "Date(928167600000-0500)"
+        * Specifically, that DANG -0500...I know it means the timezone difference, but, how is it interpreted?
+        * Is the timezone offset inherent?
+* Completely ditching Spring. Spring has strong uses in web apps, but all I was doing was using it to wire in services.
+  Getting that up and running is taking more time than it's worth at this point. Proceeding without it, just using
+  static methods in Java classes.
+
+
+  Strategy:
+  1.) Use "https://svc.metrotransit.org/NexTrip/Routes" to get the name of the routes.
+      Use a regex to match the description. Or, if the user entered a 3 digit or less number,
+      go right after the route number.
+  2.) Once the proper route number is obtained, ensure the direction is valid for that route.
+  3.) Once the route and the direction is validated, ensure the stop is valid for that combination.
+      Be sure to retrieve the "Value", as that will be used to hit up the route - direction - stop API.
+  4.) Once all data has been validated, hit the API for those sweet deets.
