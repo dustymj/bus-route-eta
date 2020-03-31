@@ -1,9 +1,6 @@
 package com.dustin.busrouteeta.services;
 
-import com.dustin.busrouteeta.data.BusRouteEtaConstants;
-import com.dustin.busrouteeta.data.DirectionVO;
-import com.dustin.busrouteeta.data.NexTripRouteVO;
-import com.dustin.busrouteeta.data.StopVO;
+import com.dustin.busrouteeta.data.*;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -63,6 +60,22 @@ public class RestConnection {
         }
 
         return stopVOS;
+    }
+
+    public static List<NexTripDepartureVO> getNexTripDepartures(String routeID, String stopID, String direction) {
+        List<NexTripDepartureVO> nexTripDepartureVOS = new ArrayList<>();
+        String url = BusRouteEtaConstants.URL_NEXT_ARRIVAL + "/" + routeID + "/" + direction + "/" + stopID;
+
+        try {
+            String jsonResponseString = getJsonResponseForUrl(url);
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES, true);
+            nexTripDepartureVOS = Arrays.asList(mapper.readValue(jsonResponseString, NexTripDepartureVO[].class));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return nexTripDepartureVOS;
     }
 
     private static String getJsonResponseForUrl(String urlString) {

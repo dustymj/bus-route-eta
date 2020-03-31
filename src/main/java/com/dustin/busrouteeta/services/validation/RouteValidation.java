@@ -25,6 +25,7 @@ public class RouteValidation {
                 return true;
             }
         }
+
         System.out.println("Route (" + inputRoute + ") is not recognized as a valid route.");
         return false;
     }

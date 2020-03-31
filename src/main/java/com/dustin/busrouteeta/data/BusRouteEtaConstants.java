@@ -28,4 +28,11 @@ public class BusRouteEtaConstants {
     public static String CONTENT_TYPE = "Content-Type";
     public static String ACCEPT_FORMAT = "Accept";
     public static String APPLICATION_JSON = "application/json";
+
+    // Millis to Minutes Scale. 1,000 milliseconds = 1 second, 60 seconds = 1 minute. 1,000 * 60 = 60,000
+    public static long MILLIS_TO_MINUTES = 60000;
+
+    // Match on the beginning "/Date(" then capture the numbers up until the '-', which is where the timezone indicator is, then capture the '-' as well as the remaining digits.
+    // Finally, match on the last )/.
+    public static String TIME_TIMEZONE_CAPTURE_REGEX = "/Date\\((\\d+)(-\\d+)\\)/";
 }
