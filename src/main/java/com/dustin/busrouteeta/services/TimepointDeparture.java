@@ -5,7 +5,6 @@ import com.dustin.busrouteeta.data.NexTripDepartureVO;
 import com.dustin.busrouteeta.data.TimepointDepartureVO;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
@@ -41,7 +40,6 @@ public class TimepointDeparture {
         return "Transit will arrive in " + nextDeparture.getDepartureText() + "utes.";
     }
 
-    // "/Date(1585612860000-0500)/"
     private static String determineApproximateETA(NexTripDepartureVO nextDeparture) {
         String nextDepartureTime = nextDeparture.getDepartureTime();
 

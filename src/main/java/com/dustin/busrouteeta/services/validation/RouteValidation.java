@@ -35,7 +35,6 @@ public class RouteValidation {
     }
 
     private static boolean isRouteIDMatch(String inputRoute, String routeID) {
-        String routeIDString = String.valueOf(routeID);
-        return StringUtils.equalsIgnoreCase(inputRoute, routeIDString);
+        return StringUtils.equalsIgnoreCase(inputRoute, routeID);
     }
 }
